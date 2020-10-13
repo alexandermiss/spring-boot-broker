@@ -9,6 +9,8 @@ import org.springframework.jms.config.*;
 import org.springframework.jms.connection.*;
 import org.springframework.jms.core.*;
 
+import java.util.*;
+
 
 @Configuration
 @EnableJms
@@ -23,12 +25,15 @@ public class JmsConfig {
     @Value("${spring.activemq.password}")
     private String password;
 
+    @Value("${mensajeria.trusted.packages}")
+    private String trustedPackages;
+
     @Bean
     public CachingConnectionFactory cachingConnectionFactory() {
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(brokerUrl);
         activeMQConnectionFactory.setUserName(username);
         activeMQConnectionFactory.setPassword(password);
-        activeMQConnectionFactory.setTrustAllPackages(true);
+        activeMQConnectionFactory.setTrustedPackages(new ArrayList(Arrays.asList(trustedPackages.split(","))));
 
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(activeMQConnectionFactory);
         cachingConnectionFactory.setCacheConsumers(true);

@@ -13,35 +13,48 @@ public class Tarea {
 
     private final Logger log = LoggerFactory.getLogger(Tarea.class);
 
+    @Value("${mensajeria.tareas.active}")
+    private String isActive;
 
     @Autowired
     private CustomSender customSender;
 
     @Scheduled(fixedRate = 1000)
     public void reportCurrentTime() {
-        try{
-            log.info("reportCurrentTime se ejecuta cada 5 segundos");
 
-            customSender.sendMessage("Sending data");
-        }catch (Exception e){
-            log.info(e.getMessage());
+        if(isActive.equals("yes")){
+            try{
+                log.info("reportCurrentTime se ejecuta cada 5 segundos");
+
+                customSender.sendMessage("Sending data");
+            }catch (Exception e){
+                log.info(e.getMessage());
+            }
+        }else{
+            log.info("disabled reportCurrentTime");
         }
+
     }
 
     @Scheduled(fixedRate = 1000)
     public void reportCustomData() {
-        try{
-            log.info("reportCustomData se ejecuta cada 5 segundos");
+        if(isActive.equals("yes")){
+            try{
+                log.info("reportCustomData se ejecuta cada 5 segundos");
 
-            CustomMessage customMessage = new CustomMessage();
+                CustomMessage customMessage = new CustomMessage();
 
-            customMessage.setId(1L);
-            customMessage.setDescription(String.format("Custom message :%s", customMessage.getId()));
+                customMessage.setId(1L);
+                customMessage.setDescription(String.format("Custom message :%s", customMessage.getId()));
 
-            customSender.sendCustomMessage(customMessage);
-        }catch (Exception e){
-            log.info(e.getMessage());
+                customSender.sendCustomMessage(customMessage);
+            }catch (Exception e){
+                log.info(e.getMessage());
+            }
+        }else{
+            log.info("disabled reportCustomData");
         }
+
     }
 
 }
