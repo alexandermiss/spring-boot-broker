@@ -28,6 +28,8 @@ public class JmsConfig {
         ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(brokerUrl);
         activeMQConnectionFactory.setUserName(username);
         activeMQConnectionFactory.setPassword(password);
+        activeMQConnectionFactory.setTrustAllPackages(true);
+
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(activeMQConnectionFactory);
         cachingConnectionFactory.setCacheConsumers(true);
         cachingConnectionFactory.setCacheProducers(true);
